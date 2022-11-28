@@ -25,4 +25,15 @@ describe("LizIsabelleNFT", function () {
         expect(ownerBalance).to.equal(BigNumber.from("1"))
     })
 
+    it("Buyer should be able to mint token", async () => {
+        const {lizNFTContract, owner, buyerAccount, donationRecipient} = await loadFixture(deployTokenFixture)
+
+        const mintTransaction = await lizNFTContract.connect(buyerAccount).mint({
+            value: ethers.utils.parseEther("0.000001"),
+        })
+        await mintTransaction.wait(1);
+        const buyerBalance = await lizNFTContract.balanceOf(buyerAccount.address);
+        expect(buyerBalance).to.equal(BigNumber.from("1"))
+    })
+
 })
