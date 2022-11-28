@@ -12,13 +12,13 @@ contract LizIsabelleNFT is ERC721Royalty, Ownable {
 
     string _baseTokenURI;
     uint256 public _price = 0.000001 ether;
-    uint256 public basisPoints = 1000; // parts per 10,000
+    uint96 public basisPoints = 1000; // parts per 10,000
     uint256 public totalTokenIdsMinted;
     address public donationRecipientAddress;
 
     event DonationRecipientChanged(address oldAddress, address newAddress);
 
-    constructor(string memory baseURI, address memory donationRecipient) ERC721("LizIsabelleNFT", "LINFT") {
+    constructor(string memory baseURI, address donationRecipient) ERC721("LizIsabelleNFT", "LINFT") {
         _baseTokenURI = baseURI;
         _setDefaultRoyalty(msg.sender, basisPoints);
         donationRecipientAddress = donationRecipient;
@@ -35,14 +35,14 @@ contract LizIsabelleNFT is ERC721Royalty, Ownable {
         // Send 10% to owner and 90% to donationRecipientAddress
         (bool sent,) = owner.call{value : price - price.div(10)}("");
         require(sent, "Failed to Send Ether to Owner");
-        (bool sent,) = donationRecipientAddress.call{value : price - (price.div(10).mul(9))}("");
-        require(sent, "Failed to send Ether to donationRecipient");
+        (bool sent1,) = donationRecipientAddress.call{value : price - (price.div(10).mul(9))}("");
+        require(sent1, "Failed to send Ether to donationRecipient");
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         _safeMint(msg.sender, newItemId);
     }
 
-    function changeDonationRecipient(address memory _newDonationRecipient) public onlyOwner {
+    function changeDonationRecipient(address _newDonationRecipient) public onlyOwner {
         address oldAddress = donationRecipientAddress;
         donationRecipientAddress = _newDonationRecipient;
         emit DonationRecipientChanged(oldAddress, _newDonationRecipient);
