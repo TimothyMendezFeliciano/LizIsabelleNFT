@@ -50,13 +50,11 @@ describe("LizIsabelleNFT", function () {
     it("Donation Recipient should have received donation", async () => {
         const {lizNFTContract, owner, buyerAccount, donationRecipient} = await loadFixture(deployTokenFixture)
         const previousBalance = await donationRecipient.getBalance()
-        console.log('Previous balance', previousBalance)
         const mintTransaction = await lizNFTContract.connect(buyerAccount).mint({
             value: ethers.utils.parseEther("0.000001")
         })
         await mintTransaction.wait(1);
         const currentBalance = await donationRecipient.getBalance()
-        console.log('Current balance', currentBalance)
         expect(currentBalance).to.be.greaterThan(previousBalance)
     })
 
