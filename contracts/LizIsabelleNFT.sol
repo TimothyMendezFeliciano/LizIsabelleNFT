@@ -33,9 +33,9 @@ contract LizIsabelleNFT is ERC721Royalty, Ownable {
         uint256 price = msg.value - (msg.value - _price);
         // Calculate 10% of _price
         // Send 10% to owner and 90% to donationRecipientAddress
-        (bool sent,) = owner.call{value : price - price.div(10)}("");
+        (bool sent,) = owner.call{value : price.div(10)}("");
         require(sent, "Failed to Send Ether to Owner");
-        (bool sent1,) = donationRecipientAddress.call{value : price - (price.div(10).mul(9))}("");
+        (bool sent1,) = donationRecipientAddress.call{value : price - (price.div(10))}("");
         require(sent1, "Failed to send Ether to donationRecipient");
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
